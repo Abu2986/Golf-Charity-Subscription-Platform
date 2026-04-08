@@ -1,0 +1,1642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>GreenHeart — Golf. Give. Win.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0f0d;
+    --surface: #111a15;
+    --card: #162019;
+    --border: #1e3027;
+    --green: #2dff7a;
+    --green-dim: #1aaf52;
+    --gold: #f5c842;
+    --coral: #ff5e5e;
+    --text: #e8f0eb;
+    --muted: #6b8a74;
+    --radius: 16px;
+    --font-display: 'Playfair Display', serif;
+    --font-body: 'DM Sans', sans-serif;
+    --font-mono: 'DM Mono', monospace;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ─── NAV ─── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 20px 48px;
+    background: rgba(10,15,13,0.85);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+  }
+  .logo {
+    font-family: var(--font-display);
+    font-size: 1.6rem;
+    font-weight: 900;
+    color: var(--green);
+    letter-spacing: -0.5px;
+    cursor: pointer;
+  }
+  .logo span { color: var(--text); }
+  .nav-links { display: flex; gap: 32px; list-style: none; }
+  .nav-links a {
+    color: var(--muted); text-decoration: none; font-size: 0.9rem;
+    font-weight: 500; transition: color 0.2s; cursor: pointer;
+  }
+  .nav-links a:hover { color: var(--text); }
+  .nav-right { display: flex; gap: 12px; align-items: center; }
+  .btn {
+    padding: 10px 22px; border-radius: 100px; font-family: var(--font-body);
+    font-weight: 600; font-size: 0.9rem; cursor: pointer; border: none;
+    transition: all 0.2s; display: inline-flex; align-items: center; gap: 8px;
+  }
+  .btn-ghost { background: transparent; border: 1px solid var(--border); color: var(--text); }
+  .btn-ghost:hover { border-color: var(--green); color: var(--green); }
+  .btn-primary { background: var(--green); color: #000; }
+  .btn-primary:hover { background: #50ff97; transform: translateY(-1px); box-shadow: 0 8px 25px rgba(45,255,122,0.3); }
+  .btn-gold { background: var(--gold); color: #000; }
+  .btn-gold:hover { background: #ffd35a; transform: translateY(-1px); }
+  .btn-danger { background: var(--coral); color: #fff; }
+  .btn-sm { padding: 7px 16px; font-size: 0.82rem; }
+  .btn-lg { padding: 16px 36px; font-size: 1rem; }
+
+  /* ─── SECTIONS ─── */
+  section { display: none; }
+  section.active { display: block; }
+
+  /* ─── HERO ─── */
+  #home {
+    min-height: 100vh;
+    display: flex; flex-direction: column; justify-content: center; align-items: center;
+    text-align: center;
+    padding: 120px 24px 80px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-glow {
+    position: absolute; top: -200px; left: 50%; transform: translateX(-50%);
+    width: 800px; height: 800px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(45,255,122,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-pill {
+    background: rgba(45,255,122,0.1); border: 1px solid rgba(45,255,122,0.3);
+    color: var(--green); padding: 6px 16px; border-radius: 100px;
+    font-size: 0.8rem; font-weight: 600; letter-spacing: 0.5px;
+    margin-bottom: 32px; display: inline-block;
+    animation: fadeUp 0.6s ease both;
+  }
+  .hero-title {
+    font-family: var(--font-display);
+    font-size: clamp(3rem, 8vw, 7rem);
+    font-weight: 900; line-height: 1;
+    margin-bottom: 24px;
+    animation: fadeUp 0.6s ease 0.1s both;
+  }
+  .hero-title .accent { color: var(--green); }
+  .hero-sub {
+    font-size: clamp(1rem, 2vw, 1.2rem);
+    color: var(--muted); max-width: 560px; line-height: 1.6;
+    margin-bottom: 48px;
+    animation: fadeUp 0.6s ease 0.2s both;
+  }
+  .hero-ctas {
+    display: flex; gap: 12px; flex-wrap: wrap; justify-content: center;
+    animation: fadeUp 0.6s ease 0.3s both;
+  }
+  .stats-row {
+    display: flex; gap: 48px; margin-top: 80px; justify-content: center; flex-wrap: wrap;
+    animation: fadeUp 0.6s ease 0.4s both;
+  }
+  .stat { text-align: center; }
+  .stat-num {
+    font-family: var(--font-display); font-size: 2.5rem;
+    font-weight: 900; color: var(--green);
+  }
+  .stat-label { color: var(--muted); font-size: 0.85rem; margin-top: 4px; }
+
+  /* ─── HOW IT WORKS ─── */
+  .section-wrap { padding: 100px 48px; max-width: 1200px; margin: 0 auto; }
+  .section-label {
+    color: var(--green); font-size: 0.8rem; font-weight: 600;
+    letter-spacing: 2px; text-transform: uppercase; margin-bottom: 12px;
+  }
+  .section-title {
+    font-family: var(--font-display); font-size: clamp(2rem, 4vw, 3.5rem);
+    font-weight: 900; line-height: 1.1; margin-bottom: 16px;
+  }
+  .section-sub { color: var(--muted); font-size: 1rem; max-width: 480px; line-height: 1.6; }
+
+  .steps-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 24px; margin-top: 60px; }
+  .step-card {
+    background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 32px; position: relative; overflow: hidden;
+    transition: border-color 0.3s, transform 0.3s;
+  }
+  .step-card:hover { border-color: var(--green-dim); transform: translateY(-4px); }
+  .step-num {
+    font-family: var(--font-display); font-size: 4rem; font-weight: 900;
+    color: rgba(45,255,122,0.1); position: absolute; top: 16px; right: 20px;
+    line-height: 1;
+  }
+  .step-icon { font-size: 2rem; margin-bottom: 16px; }
+  .step-title { font-weight: 700; font-size: 1.1rem; margin-bottom: 8px; }
+  .step-desc { color: var(--muted); font-size: 0.9rem; line-height: 1.6; }
+
+  /* ─── CARDS ─── */
+  .card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 28px;
+  }
+  .card-title { font-weight: 700; font-size: 1rem; margin-bottom: 4px; }
+  .card-sub { color: var(--muted); font-size: 0.85rem; margin-bottom: 20px; }
+
+  /* ─── PRICING ─── */
+  .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; margin-top: 60px; }
+  .pricing-card {
+    background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 40px; position: relative; transition: all 0.3s;
+  }
+  .pricing-card.featured {
+    border-color: var(--green); background: linear-gradient(135deg, #162019, #0f1f14);
+  }
+  .pricing-card.featured::before {
+    content: 'BEST VALUE'; position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
+    background: var(--green); color: #000; font-size: 0.7rem; font-weight: 700;
+    padding: 4px 12px; border-radius: 100px; letter-spacing: 1px;
+  }
+  .price-amount { font-family: var(--font-display); font-size: 3rem; font-weight: 900; }
+  .price-period { color: var(--muted); font-size: 0.9rem; }
+  .price-features { list-style: none; margin: 24px 0; display: flex; flex-direction: column; gap: 10px; }
+  .price-features li { display: flex; gap: 10px; align-items: center; font-size: 0.9rem; }
+  .price-features li::before { content: '✓'; color: var(--green); font-weight: 700; flex-shrink: 0; }
+
+  /* ─── CHARITY ─── */
+  .charity-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; margin-top: 40px; }
+  .charity-card {
+    background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 24px; transition: all 0.3s; cursor: pointer;
+  }
+  .charity-card:hover { border-color: var(--green-dim); transform: translateY(-2px); }
+  .charity-logo { font-size: 2.5rem; margin-bottom: 12px; }
+  .charity-name { font-weight: 700; font-size: 1rem; margin-bottom: 6px; }
+  .charity-cat { font-size: 0.75rem; color: var(--green); font-weight: 600; letter-spacing: 0.5px; margin-bottom: 8px; }
+  .charity-desc { color: var(--muted); font-size: 0.85rem; line-height: 1.5; }
+  .charity-raised { margin-top: 16px; font-family: var(--font-mono); font-size: 0.85rem; color: var(--gold); }
+
+  /* ─── AUTH MODAL ─── */
+  .modal-overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(8px);
+    z-index: 200; display: flex; align-items: center; justify-content: center;
+    opacity: 0; pointer-events: none; transition: opacity 0.3s;
+  }
+  .modal-overlay.open { opacity: 1; pointer-events: all; }
+  .modal {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 24px;
+    padding: 48px; width: 90%; max-width: 440px;
+    transform: scale(0.95) translateY(10px); transition: transform 0.3s;
+  }
+  .modal-overlay.open .modal { transform: scale(1) translateY(0); }
+  .modal-title { font-family: var(--font-display); font-size: 1.8rem; font-weight: 900; margin-bottom: 8px; }
+  .modal-sub { color: var(--muted); font-size: 0.9rem; margin-bottom: 32px; }
+
+  /* ─── FORMS ─── */
+  .form-group { margin-bottom: 20px; }
+  .form-label { font-size: 0.82rem; font-weight: 600; color: var(--muted); margin-bottom: 6px; display: block; letter-spacing: 0.3px; }
+  .form-input {
+    width: 100%; padding: 12px 16px; background: var(--bg); border: 1px solid var(--border);
+    border-radius: 10px; color: var(--text); font-family: var(--font-body); font-size: 0.95rem;
+    transition: border-color 0.2s; outline: none;
+  }
+  .form-input:focus { border-color: var(--green); }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .form-switch { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; color: var(--muted); margin-top: 16px; }
+  .form-switch a { color: var(--green); cursor: pointer; text-decoration: none; }
+
+  /* ─── DASHBOARD ─── */
+  .dashboard {
+    display: none;
+    padding: 100px 48px 48px;
+    max-width: 1300px; margin: 0 auto;
+  }
+  .dashboard.active { display: block; }
+  .dash-grid {
+    display: grid; grid-template-columns: 260px 1fr; gap: 32px; margin-top: 32px;
+  }
+  .sidebar {
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 24px; height: fit-content; position: sticky; top: 100px;
+  }
+  .sidebar-menu { list-style: none; display: flex; flex-direction: column; gap: 4px; margin-top: 24px; }
+  .sidebar-menu li a {
+    display: flex; align-items: center; gap: 10px; padding: 10px 12px;
+    border-radius: 10px; color: var(--muted); text-decoration: none; font-size: 0.9rem;
+    font-weight: 500; transition: all 0.2s; cursor: pointer;
+  }
+  .sidebar-menu li a:hover, .sidebar-menu li a.active {
+    background: rgba(45,255,122,0.08); color: var(--text);
+  }
+  .sidebar-menu li a.active { color: var(--green); }
+  .dash-content { display: flex; flex-direction: column; gap: 24px; }
+
+  /* ─── STATUS BADGES ─── */
+  .badge {
+    display: inline-block; padding: 4px 10px; border-radius: 100px;
+    font-size: 0.75rem; font-weight: 600; letter-spacing: 0.3px;
+  }
+  .badge-green { background: rgba(45,255,122,0.15); color: var(--green); }
+  .badge-gold { background: rgba(245,200,66,0.15); color: var(--gold); }
+  .badge-red { background: rgba(255,94,94,0.15); color: var(--coral); }
+  .badge-muted { background: rgba(107,138,116,0.15); color: var(--muted); }
+
+  /* ─── SCORE BOARD ─── */
+  .score-list { display: flex; flex-direction: column; gap: 12px; }
+  .score-item {
+    display: flex; align-items: center; justify-content: space-between;
+    background: var(--bg); border: 1px solid var(--border); border-radius: 12px;
+    padding: 16px 20px;
+  }
+  .score-val {
+    font-family: var(--font-display); font-size: 2rem; font-weight: 900;
+    color: var(--green); min-width: 60px;
+  }
+  .score-date { color: var(--muted); font-size: 0.85rem; }
+  .score-rank { font-size: 0.75rem; color: var(--muted); }
+
+  /* ─── PROGRESS BAR ─── */
+  .progress-wrap { background: var(--bg); border-radius: 100px; height: 6px; overflow: hidden; margin-top: 8px; }
+  .progress-bar { height: 100%; border-radius: 100px; background: var(--green); transition: width 1s ease; }
+  .progress-bar.gold { background: var(--gold); }
+
+  /* ─── DRAW DISPLAY ─── */
+  .draw-numbers { display: flex; gap: 12px; flex-wrap: wrap; margin: 20px 0; }
+  .draw-ball {
+    width: 56px; height: 56px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-display); font-weight: 900; font-size: 1.2rem;
+    border: 2px solid var(--border);
+  }
+  .draw-ball.green { background: rgba(45,255,122,0.15); border-color: var(--green); color: var(--green); }
+  .draw-ball.gold { background: rgba(245,200,66,0.15); border-color: var(--gold); color: var(--gold); }
+  .draw-ball.muted { background: var(--card); color: var(--muted); }
+
+  /* ─── ADMIN ─── */
+  .admin-header {
+    background: linear-gradient(135deg, #1a0a00, #1f1000);
+    border: 1px solid rgba(245,200,66,0.2); border-radius: var(--radius);
+    padding: 24px 32px; display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 32px;
+  }
+  .admin-title { font-family: var(--font-display); font-size: 1.5rem; font-weight: 900; color: var(--gold); }
+  .table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+  .table th { text-align: left; padding: 12px 16px; color: var(--muted); font-size: 0.8rem; font-weight: 600; border-bottom: 1px solid var(--border); }
+  .table td { padding: 14px 16px; border-bottom: 1px solid rgba(30,48,39,0.5); }
+  .table tr:hover td { background: rgba(45,255,122,0.03); }
+  .avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--green-dim); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.85rem; color: #000; }
+
+  /* ─── POOL DISPLAY ─── */
+  .pool-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; }
+  .pool-card {
+    background: var(--bg); border: 1px solid var(--border); border-radius: 12px;
+    padding: 20px; text-align: center;
+  }
+  .pool-amount { font-family: var(--font-display); font-size: 1.8rem; font-weight: 900; }
+  .pool-label { color: var(--muted); font-size: 0.8rem; margin-top: 4px; }
+  .pool-pct { font-size: 0.75rem; color: var(--green); font-weight: 600; margin-top: 6px; }
+
+  /* ─── TICKER ─── */
+  .ticker-wrap { overflow: hidden; background: rgba(45,255,122,0.06); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 10px 0; }
+  .ticker { display: flex; gap: 80px; animation: ticker 30s linear infinite; white-space: nowrap; }
+  .ticker-item { font-size: 0.82rem; color: var(--muted); font-weight: 500; }
+  .ticker-item span { color: var(--green); font-weight: 700; margin-right: 6px; }
+
+  /* ─── ANIMATIONS ─── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes ticker {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.5; } }
+  .pulse { animation: pulse 2s ease infinite; }
+
+  /* ─── CHARITY SEARCH ─── */
+  .search-bar {
+    display: flex; gap: 12px; margin-bottom: 32px;
+  }
+  .search-bar .form-input { flex: 1; }
+  .filter-pills { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 24px; }
+  .pill {
+    padding: 6px 14px; border-radius: 100px; border: 1px solid var(--border);
+    font-size: 0.8rem; font-weight: 500; cursor: pointer; transition: all 0.2s; background: transparent; color: var(--muted);
+  }
+  .pill.active { background: var(--green); color: #000; border-color: var(--green); }
+
+  /* ─── WINNER SECTION ─── */
+  .winner-card {
+    background: linear-gradient(135deg, #1a1500, #211a00);
+    border: 1px solid rgba(245,200,66,0.3); border-radius: var(--radius); padding: 32px;
+    position: relative; overflow: hidden;
+  }
+  .winner-card::before {
+    content: '🏆'; position: absolute; right: 24px; top: 24px; font-size: 3rem; opacity: 0.3;
+  }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 900px) {
+    nav { padding: 16px 24px; }
+    .nav-links { display: none; }
+    .section-wrap { padding: 60px 24px; }
+    .dash-grid { grid-template-columns: 1fr; }
+    .sidebar { position: static; }
+    .pool-grid { grid-template-columns: 1fr; }
+    .dashboard { padding: 90px 24px 40px; }
+    .form-row { grid-template-columns: 1fr; }
+  }
+
+  /* ─── TOAST ─── */
+  .toast {
+    position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%) translateY(20px);
+    background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+    padding: 14px 24px; font-size: 0.9rem; z-index: 500;
+    opacity: 0; transition: all 0.3s; pointer-events: none; white-space: nowrap;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+  .toast.success { border-color: var(--green); }
+  .toast.error { border-color: var(--coral); }
+
+  /* ─── MISC ─── */
+  .divider { border: none; border-top: 1px solid var(--border); margin: 32px 0; }
+  .flex { display: flex; }
+  .items-center { align-items: center; }
+  .justify-between { justify-content: space-between; }
+  .gap-12 { gap: 12px; }
+  .gap-8 { gap: 8px; }
+  .mt-4 { margin-top: 16px; }
+  .mt-2 { margin-top: 8px; }
+  .mb-4 { margin-bottom: 16px; }
+  .text-muted { color: var(--muted); }
+  .text-green { color: var(--green); }
+  .text-gold { color: var(--gold); }
+  .text-sm { font-size: 0.85rem; }
+  .font-mono { font-family: var(--font-mono); }
+  .font-bold { font-weight: 700; }
+  .text-right { text-align: right; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; }
+  @media (max-width: 600px) { .grid-2, .grid-3 { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="logo" onclick="showPage('home')">Green<span>Heart</span></div>
+  <ul class="nav-links">
+    <li><a onclick="showPage('home')">Home</a></li>
+    <li><a onclick="showPage('how')">How It Works</a></li>
+    <li><a onclick="showPage('charities')">Charities</a></li>
+    <li><a onclick="showPage('draws')">Draws</a></li>
+    <li><a onclick="showPage('pricing')">Pricing</a></li>
+  </ul>
+  <div class="nav-right" id="navRight">
+    <button class="btn btn-ghost" onclick="openModal('login')">Sign In</button>
+    <button class="btn btn-primary" onclick="openModal('signup')">Join Now</button>
+  </div>
+</nav>
+
+<!-- TICKER -->
+<div class="ticker-wrap" style="position:fixed;top:73px;left:0;right:0;z-index:99;">
+  <div class="ticker">
+    <div class="ticker-item"><span>LAST DRAW</span>5-Match Winner — £4,200 Jackpot Claimed</div>
+    <div class="ticker-item"><span>CHARITY</span>Cancer Research UK raised £12,400 this month</div>
+    <div class="ticker-item"><span>NEXT DRAW</span>May 1st — Pool currently £8,750</div>
+    <div class="ticker-item"><span>NEW</span>1,243 active subscribers this month</div>
+    <div class="ticker-item"><span>LAST DRAW</span>5-Match Winner — £4,200 Jackpot Claimed</div>
+    <div class="ticker-item"><span>CHARITY</span>Cancer Research UK raised £12,400 this month</div>
+    <div class="ticker-item"><span>NEXT DRAW</span>May 1st — Pool currently £8,750</div>
+    <div class="ticker-item"><span>NEW</span>1,243 active subscribers this month</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- HOME -->
+<!-- ═══════════════════════════════════════════ -->
+<section id="home" class="active" style="padding-top:110px;">
+  <div id="home-inner" style="min-height:100vh; display:flex; flex-direction:column;">
+    <!-- HERO -->
+    <div style="flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding: 60px 24px 40px; position:relative; overflow:hidden;">
+      <div class="hero-glow"></div>
+      <div class="hero-pill">🌍 Golf with Purpose</div>
+      <h1 class="hero-title">
+        Play Golf.<br>
+        <span class="accent">Change Lives.</span><br>
+        Win Big.
+      </h1>
+      <p class="hero-sub">
+        Enter your Stableford scores each month. Support a charity you love. 
+        Compete in our monthly prize draw. Everyone wins.
+      </p>
+      <div class="hero-ctas">
+        <button class="btn btn-primary btn-lg" onclick="openModal('signup')">
+          Start My Journey →
+        </button>
+        <button class="btn btn-ghost btn-lg" onclick="showPage('how')">How It Works</button>
+      </div>
+      <div class="stats-row">
+        <div class="stat"><div class="stat-num">£47K</div><div class="stat-label">Donated to Charity</div></div>
+        <div class="stat"><div class="stat-num">1,243</div><div class="stat-label">Active Members</div></div>
+        <div class="stat"><div class="stat-num">£8,750</div><div class="stat-label">Current Prize Pool</div></div>
+        <div class="stat"><div class="stat-num">38</div><div class="stat-label">Partner Charities</div></div>
+      </div>
+    </div>
+
+    <!-- HOW IT WORKS (preview) -->
+    <div class="section-wrap" style="text-align:center;">
+      <div class="section-label">Simple by design</div>
+      <h2 class="section-title">Golf that gives back</h2>
+      <p class="section-sub" style="margin:0 auto;">Every score you enter is a step toward winning — and every subscription is a step toward changing someone's world.</p>
+      <div class="steps-grid">
+        <div class="step-card">
+          <div class="step-num">01</div>
+          <div class="step-icon">📋</div>
+          <div class="step-title">Subscribe</div>
+          <div class="step-desc">Pick your plan. Monthly or yearly — both include full platform access, draw entry, and charity contribution.</div>
+        </div>
+        <div class="step-card">
+          <div class="step-num">02</div>
+          <div class="step-icon">⛳</div>
+          <div class="step-title">Enter Scores</div>
+          <div class="step-desc">Log your last 5 Stableford scores. These become your draw numbers — your game, your fate.</div>
+        </div>
+        <div class="step-card">
+          <div class="step-num">03</div>
+          <div class="step-icon">❤️</div>
+          <div class="step-title">Choose Charity</div>
+          <div class="step-desc">Select a cause you care about. At least 10% of your subscription goes directly to them every month.</div>
+        </div>
+        <div class="step-card">
+          <div class="step-num">04</div>
+          <div class="step-icon">🏆</div>
+          <div class="step-title">Win Prizes</div>
+          <div class="step-desc">Monthly draws match your scores. 3, 4, or 5-number matches unlock tiered prize pools — jackpot rolls over!</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FEATURED CHARITY -->
+    <div style="background: linear-gradient(135deg, rgba(45,255,122,0.04), transparent); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 80px 48px; text-align:center;">
+      <div class="section-label">Spotlight Charity</div>
+      <div style="font-size:3rem; margin:16px 0;">🎗️</div>
+      <h3 style="font-family:var(--font-display); font-size:2rem; font-weight:900; margin-bottom:12px;">Cancer Research UK</h3>
+      <p style="color:var(--muted); max-width:500px; margin:0 auto 24px; line-height:1.6; font-size:0.95rem;">This month's featured charity. Our community has donated <strong style="color:var(--green);">£12,400</strong> towards life-saving cancer research this month alone.</p>
+      <button class="btn btn-primary" onclick="showPage('charities')">Explore All Charities →</button>
+    </div>
+
+    <!-- PRIZE POOL -->
+    <div class="section-wrap">
+      <div class="section-label">This Month's Prize Pool</div>
+      <h2 class="section-title" style="margin-bottom:40px;">Current Draw — May 2025</h2>
+      <div class="pool-grid">
+        <div class="pool-card">
+          <div class="pool-amount text-green">£3,500</div>
+          <div class="pool-label">5-Number Jackpot</div>
+          <div class="pool-pct">40% of pool · Rolls over if unclaimed</div>
+          <div class="progress-wrap mt-2"><div class="progress-bar" style="width:40%"></div></div>
+        </div>
+        <div class="pool-card">
+          <div class="pool-amount text-gold">£3,062</div>
+          <div class="pool-label">4-Number Match</div>
+          <div class="pool-pct">35% of pool</div>
+          <div class="progress-wrap mt-2"><div class="progress-bar gold" style="width:35%"></div></div>
+        </div>
+        <div class="pool-card">
+          <div class="pool-amount" style="color:var(--coral);">£2,187</div>
+          <div class="pool-label">3-Number Match</div>
+          <div class="pool-pct">25% of pool</div>
+          <div class="progress-wrap mt-2"><div class="progress-bar" style="width:25%; background:var(--coral)"></div></div>
+        </div>
+      </div>
+      <p style="text-align:center; color:var(--muted); font-size:0.85rem; margin-top:24px;">Based on 1,243 active subscribers · Draw runs <strong>May 1st</strong></p>
+    </div>
+
+    <!-- CTA FOOTER -->
+    <div style="text-align:center; padding:80px 24px; border-top:1px solid var(--border);">
+      <h2 style="font-family:var(--font-display); font-size:clamp(2rem,5vw,4rem); font-weight:900; margin-bottom:16px;">Ready to play with purpose?</h2>
+      <p style="color:var(--muted); margin-bottom:32px;">Join over 1,200 golfers making a difference — one score at a time.</p>
+      <button class="btn btn-primary btn-lg" onclick="openModal('signup')">Get Started — It's Simple</button>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- HOW IT WORKS -->
+<!-- ═══════════════════════════════════════════ -->
+<section id="how" style="padding-top:110px;">
+  <div class="section-wrap">
+    <div class="section-label">The Details</div>
+    <h2 class="section-title">How GreenHeart Works</h2>
+    <p class="section-sub">Transparent, fair, and designed around you.</p>
+    <div class="steps-grid" style="margin-top:60px;">
+      <div class="step-card">
+        <div class="step-num">01</div>
+        <div class="step-icon">💳</div>
+        <div class="step-title">Subscribe Monthly or Yearly</div>
+        <div class="step-desc">Choose your plan. Payments are processed securely via Stripe. Cancel anytime. Yearly plans save 20%.</div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">02</div>
+        <div class="step-icon">⛳</div>
+        <div class="step-title">Log Your Stableford Scores</div>
+        <div class="step-desc">Enter up to 5 scores (range 1–45). Each must include a date. Your 5 most recent scores are kept. New entries replace the oldest.</div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">03</div>
+        <div class="step-icon">❤️</div>
+        <div class="step-title">Support Your Charity</div>
+        <div class="step-desc">Pick any charity from our directory. A minimum of 10% of your subscription goes directly to them. You can give more.</div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">04</div>
+        <div class="step-icon">🎲</div>
+        <div class="step-title">Monthly Draw</div>
+        <div class="step-desc">Every month, 5 numbers are drawn. Your scores are compared. Match 3, 4, or all 5 numbers to win your tier.</div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">05</div>
+        <div class="step-icon">🏅</div>
+        <div class="step-title">Verify & Collect</div>
+        <div class="step-desc">Winners submit proof via screenshot of their golf platform scores. Our admin team reviews and approves within 48 hours.</div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">06</div>
+        <div class="step-icon">🔄</div>
+        <div class="step-title">Jackpot Rollover</div>
+        <div class="step-desc">If no one matches all 5 numbers, the jackpot rolls over to next month — growing the prize for every player.</div>
+      </div>
+    </div>
+
+    <div style="margin-top:60px; background:var(--card); border:1px solid var(--border); border-radius:var(--radius); padding:40px;">
+      <h3 style="font-family:var(--font-display); font-size:1.5rem; font-weight:900; margin-bottom:24px;">Prize Pool Breakdown</h3>
+      <table class="table">
+        <thead><tr><th>Match Type</th><th>Pool Share</th><th>Rollover?</th><th>Example Prize*</th></tr></thead>
+        <tbody>
+          <tr><td><span class="badge badge-green">5-Number Match</span></td><td>40%</td><td>✅ Yes — Jackpot</td><td class="text-green font-mono">£3,500</td></tr>
+          <tr><td><span class="badge badge-gold">4-Number Match</span></td><td>35%</td><td>❌ No</td><td class="text-gold font-mono">£3,062 ÷ winners</td></tr>
+          <tr><td><span class="badge badge-muted">3-Number Match</span></td><td>25%</td><td>❌ No</td><td class="font-mono">£2,187 ÷ winners</td></tr>
+        </tbody>
+      </table>
+      <p class="text-muted text-sm mt-4">*Based on 1,243 subscribers at current subscription rate. Split equally among multiple winners in the same tier.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- CHARITIES -->
+<!-- ═══════════════════════════════════════════ -->
+<section id="charities" style="padding-top:110px;">
+  <div class="section-wrap">
+    <div class="section-label">Give Back</div>
+    <h2 class="section-title">Our Charity Partners</h2>
+    <p class="section-sub">38 verified charities. Your subscription, your choice.</p>
+
+    <div class="search-bar mt-4">
+      <input type="text" class="form-input" placeholder="Search charities..." id="charitySearch" oninput="filterCharities()">
+      <button class="btn btn-ghost">Filter</button>
+    </div>
+
+    <div class="filter-pills">
+      <button class="pill active" onclick="filterPill(this,'all')">All</button>
+      <button class="pill" onclick="filterPill(this,'health')">Health</button>
+      <button class="pill" onclick="filterPill(this,'children')">Children</button>
+      <button class="pill" onclick="filterPill(this,'environment')">Environment</button>
+      <button class="pill" onclick="filterPill(this,'sport')">Sport & Community</button>
+      <button class="pill" onclick="filterPill(this,'mental')">Mental Health</button>
+    </div>
+
+    <div class="charity-grid" id="charityGrid">
+      <!-- populated by JS -->
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- DRAWS -->
+<!-- ═══════════════════════════════════════════ -->
+<section id="draws" style="padding-top:110px;">
+  <div class="section-wrap">
+    <div class="section-label">Monthly Draw</div>
+    <h2 class="section-title">Draw Results</h2>
+    <p class="section-sub">See past results and the upcoming draw schedule.</p>
+
+    <!-- Current pool -->
+    <div style="background:linear-gradient(135deg,#0f1f14,#162019); border:1px solid rgba(45,255,122,0.2); border-radius:var(--radius); padding:40px; margin-top:48px; text-align:center;">
+      <div class="badge badge-green mb-4" style="font-size:0.8rem; padding:6px 16px;">🟢 DRAW OPEN — May 2025</div>
+      <h3 style="font-family:var(--font-display); font-size:2rem; font-weight:900; margin:16px 0;">Next Draw: May 1st, 2025</h3>
+      <div class="draw-numbers" style="justify-content:center;">
+        <div class="draw-ball muted">?</div>
+        <div class="draw-ball muted">?</div>
+        <div class="draw-ball muted">?</div>
+        <div class="draw-ball muted">?</div>
+        <div class="draw-ball muted">?</div>
+      </div>
+      <p class="text-muted text-sm">Numbers will be revealed when the draw runs. Current pool: <span class="text-green font-mono">£8,750</span></p>
+      <button class="btn btn-primary mt-4" onclick="openModal('signup')">Enter the Draw →</button>
+    </div>
+
+    <!-- Past draws -->
+    <h3 style="font-family:var(--font-display); font-size:1.5rem; font-weight:900; margin-top:60px; margin-bottom:24px;">Past Draws</h3>
+    <div style="display:flex; flex-direction:column; gap:16px;" id="pastDraws"></div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- PRICING -->
+<!-- ═══════════════════════════════════════════ -->
+<section id="pricing" style="padding-top:110px;">
+  <div class="section-wrap" style="text-align:center;">
+    <div class="section-label">Membership</div>
+    <h2 class="section-title">Simple, Transparent Pricing</h2>
+    <p class="section-sub" style="margin:0 auto 60px;">One subscription. Full access. Real impact.</p>
+
+    <div class="pricing-grid">
+      <div class="pricing-card">
+        <div class="section-label">Monthly</div>
+        <div class="price-amount">£9.99</div>
+        <div class="price-period">per month · billed monthly</div>
+        <ul class="price-features">
+          <li>Full platform access</li>
+          <li>Monthly draw entry</li>
+          <li>10%+ charity contribution</li>
+          <li>Score management</li>
+          <li>Winner verification system</li>
+          <li>Cancel anytime</li>
+        </ul>
+        <button class="btn btn-ghost" style="width:100%" onclick="openModal('signup')">Get Started</button>
+      </div>
+      <div class="pricing-card featured">
+        <div class="section-label">Yearly</div>
+        <div class="price-amount">£7.99</div>
+        <div class="price-period">per month · billed £95.88/year</div>
+        <ul class="price-features">
+          <li>Everything in Monthly</li>
+          <li>Save £24 per year (20% off)</li>
+          <li>Priority winner verification</li>
+          <li>Early draw access</li>
+          <li>Exclusive yearly member badge</li>
+          <li>Lock in current pricing</li>
+        </ul>
+        <button class="btn btn-primary" style="width:100%" onclick="openModal('signup')">Start Yearly Plan →</button>
+      </div>
+    </div>
+
+    <div style="margin-top:48px; display:flex; gap:32px; justify-content:center; flex-wrap:wrap;">
+      <div style="display:flex; align-items:center; gap:8px; color:var(--muted); font-size:0.85rem;">
+        🔒 Secure Stripe payments
+      </div>
+      <div style="display:flex; align-items:center; gap:8px; color:var(--muted); font-size:0.85rem;">
+        ❤️ 10%+ goes to charity
+      </div>
+      <div style="display:flex; align-items:center; gap:8px; color:var(--muted); font-size:0.85rem;">
+        🎯 Cancel anytime
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- DASHBOARD (USER) -->
+<!-- ═══════════════════════════════════════════ -->
+<div id="dashboard" class="dashboard">
+  <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
+    <div>
+      <div class="section-label">Member Portal</div>
+      <h2 style="font-family:var(--font-display); font-size:2rem; font-weight:900;" id="dashWelcome">Welcome back, Jamie</h2>
+    </div>
+    <span class="badge badge-green">Active Subscriber</span>
+  </div>
+
+  <div class="dash-grid">
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+      <div style="text-align:center;">
+        <div style="width:64px; height:64px; background:var(--green-dim); border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:1.5rem; color:#000; margin:0 auto 12px;" id="dashAvatar">J</div>
+        <div style="font-weight:700;" id="dashName">Jamie Wilson</div>
+        <div style="color:var(--muted); font-size:0.8rem;" id="dashEmail">jamie@example.com</div>
+      </div>
+      <ul class="sidebar-menu">
+        <li><a onclick="showDashTab('overview')" id="tab-overview" class="active">📊 Overview</a></li>
+        <li><a onclick="showDashTab('scores')" id="tab-scores">⛳ My Scores</a></li>
+        <li><a onclick="showDashTab('charity')" id="tab-charity">❤️ My Charity</a></li>
+        <li><a onclick="showDashTab('draws')" id="tab-draws">🎲 Draw History</a></li>
+        <li><a onclick="showDashTab('winnings')" id="tab-winnings">🏆 Winnings</a></li>
+        <li><a onclick="showDashTab('settings')" id="tab-settings">⚙️ Settings</a></li>
+        <li style="margin-top:24px;"><a onclick="logout()" style="color:var(--coral)!important;">↩ Sign Out</a></li>
+      </ul>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="dash-content">
+
+      <!-- OVERVIEW -->
+      <div id="dash-overview">
+        <div class="grid-3">
+          <div class="card">
+            <div class="text-muted text-sm">Subscription</div>
+            <div style="font-family:var(--font-display); font-size:1.5rem; font-weight:900; margin:8px 0;">Monthly</div>
+            <div class="text-sm text-muted">Renews May 15th</div>
+            <div class="progress-wrap mt-2"><div class="progress-bar" style="width:70%"></div></div>
+          </div>
+          <div class="card">
+            <div class="text-muted text-sm">Draws Entered</div>
+            <div style="font-family:var(--font-display); font-size:1.5rem; font-weight:900; margin:8px 0;">7</div>
+            <div class="text-sm text-muted">Since joining</div>
+          </div>
+          <div class="card">
+            <div class="text-muted text-sm">Donated to Charity</div>
+            <div style="font-family:var(--font-display); font-size:1.5rem; font-weight:900; margin:8px 0; color:var(--green);">£8.99</div>
+            <div class="text-sm text-muted">Cancer Research UK</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="flex items-center justify-between mb-4">
+            <div><div class="card-title">My Scores</div><div class="card-sub">Your 5 most recent Stableford scores</div></div>
+            <button class="btn btn-primary btn-sm" onclick="showDashTab('scores')">Add Score</button>
+          </div>
+          <div class="score-list" id="overviewScores"></div>
+        </div>
+
+        <div class="card" style="background:linear-gradient(135deg,#0f1f14,#162019); border-color:rgba(45,255,122,0.2);">
+          <div class="card-title">Next Draw — May 1st</div>
+          <div class="card-sub">Your entry is confirmed ✓</div>
+          <div class="draw-numbers">
+            <div class="draw-ball muted">?</div>
+            <div class="draw-ball muted">?</div>
+            <div class="draw-ball muted">?</div>
+            <div class="draw-ball muted">?</div>
+            <div class="draw-ball muted">?</div>
+          </div>
+          <p class="text-muted text-sm">Current pool: <span class="text-green font-mono font-bold">£8,750</span></p>
+        </div>
+      </div>
+
+      <!-- SCORES -->
+      <div id="dash-scores" style="display:none;">
+        <div class="card">
+          <div class="card-title">Enter New Score</div>
+          <div class="card-sub">Stableford format only (range 1–45). Replaces oldest score when you have 5.</div>
+          <div class="form-row mt-4">
+            <div class="form-group">
+              <label class="form-label">Score (1–45)</label>
+              <input type="number" class="form-input" id="newScore" min="1" max="45" placeholder="e.g. 32">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Date Played</label>
+              <input type="date" class="form-input" id="newScoreDate">
+            </div>
+          </div>
+          <button class="btn btn-primary" onclick="addScore()">Save Score</button>
+        </div>
+
+        <div class="card">
+          <div class="card-title">My Score History</div>
+          <div class="card-sub">Newest first. Only your latest 5 scores are used for draws.</div>
+          <div class="score-list mt-4" id="scoreList"></div>
+        </div>
+      </div>
+
+      <!-- CHARITY -->
+      <div id="dash-charity" style="display:none;">
+        <div class="card">
+          <div class="card-title">My Charity</div>
+          <div class="card-sub">You can change your charity once per billing cycle.</div>
+          <div style="background:var(--bg); border:1px solid var(--border); border-radius:12px; padding:24px; margin-top:20px; display:flex; gap:20px; align-items:center;">
+            <div style="font-size:3rem;">🎗️</div>
+            <div>
+              <div style="font-weight:700; font-size:1.1rem; margin-bottom:4px;">Cancer Research UK</div>
+              <div class="text-muted text-sm mb-4">Supporting life-saving cancer research since 2002</div>
+              <span class="badge badge-green">Currently Selected</span>
+            </div>
+          </div>
+          <div style="margin-top:24px;">
+            <label class="form-label">My Contribution Percentage</label>
+            <div style="display:flex; align-items:center; gap:16px; margin-top:8px;">
+              <input type="range" min="10" max="50" value="10" id="charitySlider" oninput="updateCharitySlider()" style="flex:1; accent-color:var(--green);">
+              <div style="font-family:var(--font-display); font-size:1.5rem; font-weight:900; color:var(--green); min-width:50px;" id="charityPct">10%</div>
+            </div>
+            <div class="text-muted text-sm mt-2">Minimum 10% · Equivalent to <span id="charityAmt" class="text-green">£1.00</span>/month</div>
+          </div>
+          <button class="btn btn-primary mt-4" onclick="showToast('Charity contribution updated!','success')">Save Changes</button>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Change Charity</div>
+          <div class="card-sub">Select a new charity for next billing cycle</div>
+          <div class="charity-grid" id="dashCharityGrid" style="grid-template-columns: repeat(auto-fill, minmax(200px,1fr)); margin-top:16px;"></div>
+        </div>
+      </div>
+
+      <!-- DRAW HISTORY -->
+      <div id="dash-draws" style="display:none;">
+        <div class="card">
+          <div class="card-title">My Draw History</div>
+          <div class="card-sub">Your participation record across all monthly draws</div>
+          <div style="display:flex; flex-direction:column; gap:12px; margin-top:20px;" id="userDrawHistory"></div>
+        </div>
+      </div>
+
+      <!-- WINNINGS -->
+      <div id="dash-winnings" style="display:none;">
+        <div class="winner-card">
+          <div class="card-title text-gold">🏆 Winnings Overview</div>
+          <div style="font-family:var(--font-display); font-size:3rem; font-weight:900; color:var(--gold); margin:12px 0;">£0.00</div>
+          <div class="text-muted text-sm">Total winnings to date</div>
+        </div>
+        <div class="card mt-4">
+          <div class="card-title">Upload Winner Proof</div>
+          <div class="card-sub">If you've been selected as a winner, upload a screenshot of your scores from your golf platform.</div>
+          <div style="border:2px dashed var(--border); border-radius:12px; padding:40px; text-align:center; margin-top:16px; cursor:pointer;" onclick="showToast('File upload coming soon','success')">
+            <div style="font-size:2rem; margin-bottom:12px;">📎</div>
+            <div style="font-weight:600; margin-bottom:4px;">Click to upload proof</div>
+            <div class="text-muted text-sm">PNG, JPG up to 10MB</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SETTINGS -->
+      <div id="dash-settings" style="display:none;">
+        <div class="card">
+          <div class="card-title">Account Settings</div>
+          <div class="card-sub">Update your profile information</div>
+          <div class="form-row mt-4">
+            <div class="form-group"><label class="form-label">First Name</label><input type="text" class="form-input" value="Jamie"></div>
+            <div class="form-group"><label class="form-label">Last Name</label><input type="text" class="form-input" value="Wilson"></div>
+          </div>
+          <div class="form-group"><label class="form-label">Email</label><input type="email" class="form-input" value="jamie@example.com"></div>
+          <button class="btn btn-primary" onclick="showToast('Profile updated!','success')">Save Changes</button>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Subscription</div>
+          <div class="card-sub">Manage your plan</div>
+          <div style="display:flex; align-items:center; justify-content:space-between; background:var(--bg); border:1px solid var(--border); border-radius:12px; padding:20px; margin-top:16px;">
+            <div>
+              <div style="font-weight:700;">Monthly Plan — £9.99/mo</div>
+              <div class="text-muted text-sm">Next renewal: May 15, 2025</div>
+            </div>
+            <span class="badge badge-green">Active</span>
+          </div>
+          <div style="display:flex; gap:12px; margin-top:16px; flex-wrap:wrap;">
+            <button class="btn btn-ghost btn-sm" onclick="showToast('Upgrade to yearly — save 20%!','success')">Upgrade to Yearly</button>
+            <button class="btn btn-sm" style="background:transparent; border:1px solid var(--coral); color:var(--coral); border-radius:100px; padding:7px 16px; font-size:0.82rem; cursor:pointer;" onclick="showToast('Cancellation request sent','error')">Cancel Subscription</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- ADMIN DASHBOARD -->
+<!-- ═══════════════════════════════════════════ -->
+<div id="adminDash" class="dashboard">
+  <div class="admin-header">
+    <div>
+      <div style="font-size:0.75rem; color:var(--gold); font-weight:600; letter-spacing:1px; margin-bottom:4px;">ADMINISTRATOR</div>
+      <div class="admin-title">GreenHeart Admin Panel</div>
+    </div>
+    <div style="display:flex; gap:12px; align-items:center;">
+      <span class="badge badge-gold">Admin Access</span>
+      <button class="btn btn-ghost btn-sm" onclick="logout()">Sign Out</button>
+    </div>
+  </div>
+
+  <div class="dash-grid">
+    <div class="sidebar">
+      <ul class="sidebar-menu" style="margin-top:0;">
+        <li><a onclick="showAdminTab('overview')" id="atab-overview" class="active">📊 Overview</a></li>
+        <li><a onclick="showAdminTab('users')" id="atab-users">👥 Users</a></li>
+        <li><a onclick="showAdminTab('draws')" id="atab-draws">🎲 Draws</a></li>
+        <li><a onclick="showAdminTab('charities')" id="atab-charities">❤️ Charities</a></li>
+        <li><a onclick="showAdminTab('winners')" id="atab-winners">🏆 Winners</a></li>
+        <li><a onclick="showAdminTab('reports')" id="atab-reports">📈 Reports</a></li>
+      </ul>
+    </div>
+
+    <div class="dash-content">
+
+      <!-- ADMIN OVERVIEW -->
+      <div id="adash-overview">
+        <div class="grid-3">
+          <div class="card"><div class="text-muted text-sm">Total Users</div><div style="font-family:var(--font-display); font-size:2rem; font-weight:900; margin:8px 0;">1,243</div><div class="text-sm text-green">+47 this month</div></div>
+          <div class="card"><div class="text-muted text-sm">Prize Pool</div><div style="font-family:var(--font-display); font-size:2rem; font-weight:900; margin:8px 0; color:var(--green);">£8,750</div><div class="text-sm text-muted">May draw</div></div>
+          <div class="card"><div class="text-muted text-sm">Charity Total</div><div style="font-family:var(--font-display); font-size:2rem; font-weight:900; margin:8px 0; color:var(--gold);">£47,200</div><div class="text-sm text-muted">All time</div></div>
+        </div>
+        <div class="grid-2">
+          <div class="card"><div class="text-muted text-sm">Pending Verifications</div><div style="font-family:var(--font-display); font-size:1.5rem; font-weight:900; margin:8px 0; color:var(--coral);">3</div><button class="btn btn-sm btn-ghost" onclick="showAdminTab('winners')">Review →</button></div>
+          <div class="card"><div class="text-muted text-sm">Next Draw</div><div style="font-family:var(--font-display); font-size:1.5rem; font-weight:900; margin:8px 0;">May 1st</div><button class="btn btn-sm btn-primary" onclick="showAdminTab('draws')">Configure →</button></div>
+        </div>
+      </div>
+
+      <!-- ADMIN USERS -->
+      <div id="adash-users" style="display:none;">
+        <div class="card">
+          <div class="flex items-center justify-between mb-4">
+            <div><div class="card-title">User Management</div><div class="card-sub">All registered subscribers</div></div>
+            <input type="text" class="form-input" style="width:200px; padding:8px 12px; font-size:0.85rem;" placeholder="Search users...">
+          </div>
+          <table class="table" id="adminUserTable"></table>
+        </div>
+      </div>
+
+      <!-- ADMIN DRAWS -->
+      <div id="adash-draws" style="display:none;">
+        <div class="card">
+          <div class="card-title">Draw Configuration</div>
+          <div class="card-sub">Configure and run the monthly draw</div>
+          <div class="form-row mt-4">
+            <div class="form-group">
+              <label class="form-label">Draw Logic</label>
+              <select class="form-input">
+                <option>Random Generation (Standard)</option>
+                <option>Algorithmic (Weighted by frequency)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Draw Month</label>
+              <input type="month" class="form-input" value="2025-05">
+            </div>
+          </div>
+          <div style="display:flex; gap:12px; flex-wrap:wrap;">
+            <button class="btn btn-ghost" onclick="runSimulation()">🔍 Run Simulation</button>
+            <button class="btn btn-primary" onclick="publishDraw()">🚀 Publish Draw</button>
+          </div>
+        </div>
+
+        <div class="card" id="simulationResult" style="display:none;">
+          <div class="card-title">Simulation Result</div>
+          <div class="card-sub">Pre-analysis — not published</div>
+          <div class="draw-numbers mt-4" id="simNumbers"></div>
+          <div id="simStats" style="margin-top:16px;"></div>
+        </div>
+      </div>
+
+      <!-- ADMIN CHARITIES -->
+      <div id="adash-charities" style="display:none;">
+        <div class="card">
+          <div class="flex items-center justify-between mb-4">
+            <div><div class="card-title">Charity Management</div><div class="card-sub">Add, edit, or remove charities</div></div>
+            <button class="btn btn-primary btn-sm" onclick="showToast('Add charity form coming!','success')">+ Add Charity</button>
+          </div>
+          <table class="table" id="adminCharityTable"></table>
+        </div>
+      </div>
+
+      <!-- ADMIN WINNERS -->
+      <div id="adash-winners" style="display:none;">
+        <div class="card">
+          <div class="card-title">Winner Verification</div>
+          <div class="card-sub">Review and approve winner submissions</div>
+          <div style="display:flex; flex-direction:column; gap:12px; margin-top:20px;" id="adminWinnerList"></div>
+        </div>
+      </div>
+
+      <!-- ADMIN REPORTS -->
+      <div id="adash-reports" style="display:none;">
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-title">Revenue Overview</div>
+            <div style="display:flex; flex-direction:column; gap:12px; margin-top:16px;">
+              <div class="flex justify-between"><span class="text-muted">Monthly revenue</span><span class="font-mono text-green">£12,417.57</span></div>
+              <div class="flex justify-between"><span class="text-muted">Yearly revenue</span><span class="font-mono text-green">£148,990.84</span></div>
+              <div class="flex justify-between"><span class="text-muted">Prize paid out</span><span class="font-mono" style="color:var(--coral);">£34,200.00</span></div>
+              <div class="flex justify-between"><span class="text-muted">Charity total</span><span class="font-mono text-gold">£47,200.00</span></div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title">Draw Statistics</div>
+            <div style="display:flex; flex-direction:column; gap:12px; margin-top:16px;">
+              <div class="flex justify-between"><span class="text-muted">Draws run</span><span class="font-mono">24</span></div>
+              <div class="flex justify-between"><span class="text-muted">5-match winners</span><span class="font-mono text-green">3</span></div>
+              <div class="flex justify-between"><span class="text-muted">4-match winners</span><span class="font-mono text-gold">18</span></div>
+              <div class="flex justify-between"><span class="text-muted">3-match winners</span><span class="font-mono">67</span></div>
+              <div class="flex justify-between"><span class="text-muted">Jackpot rollovers</span><span class="font-mono">4</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">Charity Contributions</div>
+          <div style="display:flex; flex-direction:column; gap:10px; margin-top:16px;" id="charityReport"></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- AUTH MODALS -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="modal-overlay" id="loginModal">
+  <div class="modal">
+    <div class="modal-title">Welcome back</div>
+    <div class="modal-sub">Sign in to your GreenHeart account</div>
+    <div class="form-group"><label class="form-label">Email</label><input type="email" class="form-input" id="loginEmail" placeholder="you@example.com"></div>
+    <div class="form-group"><label class="form-label">Password</label><input type="password" class="form-input" id="loginPassword" placeholder="••••••••"></div>
+    <button class="btn btn-primary" style="width:100%; margin-top:8px;" onclick="doLogin()">Sign In →</button>
+    <div class="form-switch">Don't have an account? <a onclick="switchModal('signup')">Join GreenHeart</a></div>
+    <div class="form-switch" style="margin-top:6px;">Admin? <a onclick="doAdminLogin()">Admin login</a></div>
+    <button onclick="closeModal()" style="position:absolute; top:20px; right:20px; background:none; border:none; color:var(--muted); font-size:1.2rem; cursor:pointer;">✕</button>
+  </div>
+</div>
+
+<div class="modal-overlay" id="signupModal">
+  <div class="modal">
+    <div class="modal-title">Join GreenHeart</div>
+    <div class="modal-sub">Start your journey — play golf, give back, win prizes.</div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">First Name</label><input type="text" class="form-input" id="signupFirst" placeholder="Jamie"></div>
+      <div class="form-group"><label class="form-label">Last Name</label><input type="text" class="form-input" id="signupLast" placeholder="Wilson"></div>
+    </div>
+    <div class="form-group"><label class="form-label">Email</label><input type="email" class="form-input" id="signupEmail" placeholder="you@example.com"></div>
+    <div class="form-group"><label class="form-label">Password</label><input type="password" class="form-input" id="signupPassword" placeholder="Create a password"></div>
+    <div class="form-group">
+      <label class="form-label">Plan</label>
+      <select class="form-input" id="signupPlan">
+        <option value="monthly">Monthly — £9.99/mo</option>
+        <option value="yearly">Yearly — £7.99/mo (save 20%)</option>
+      </select>
+    </div>
+    <button class="btn btn-primary" style="width:100%; margin-top:8px;" onclick="doSignup()">Create Account & Subscribe →</button>
+    <div class="form-switch">Already a member? <a onclick="switchModal('login')">Sign in</a></div>
+    <button onclick="closeModal()" style="position:absolute; top:20px; right:20px; background:none; border:none; color:var(--muted); font-size:1.2rem; cursor:pointer;">✕</button>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ═══════════════════════════════════
+// STATE
+// ═══════════════════════════════════
+let currentUser = null;
+let isAdmin = false;
+let scores = [
+  { val: 34, date: '2025-04-10' },
+  { val: 28, date: '2025-03-25' },
+  { val: 31, date: '2025-03-12' },
+  { val: 29, date: '2025-02-28' },
+  { val: 36, date: '2025-02-14' },
+];
+
+const charities = [
+  { id:1, name:'Cancer Research UK', cat:'health', emoji:'🎗️', desc:'Funding life-saving research into all types of cancer.', raised:'£12,400' },
+  { id:2, name:'Mind', cat:'mental', emoji:'🧠', desc:'Mental health support, advice and local services.', raised:'£4,200' },
+  { id:3, name:'Save the Children', cat:'children', emoji:'👶', desc:'Helping children worldwide lead safe, healthy lives.', raised:'£8,100' },
+  { id:4, name:'WWF', cat:'environment', emoji:'🐼', desc:'Protecting the world\'s most vulnerable species and habitats.', raised:'£3,900' },
+  { id:5, name:'Golf Foundation', cat:'sport', emoji:'⛳', desc:'Inspiring young people to play golf and reach their potential.', raised:'£2,750' },
+  { id:6, name:'British Heart Foundation', cat:'health', emoji:'❤️', desc:'Pioneering research to beat heartbreak of heart disease.', raised:'£6,300' },
+  { id:7, name:'Macmillan Cancer Support', cat:'health', emoji:'🌻', desc:'Support for people living with cancer.', raised:'£5,600' },
+  { id:8, name:'Trees for Cities', cat:'environment', emoji:'🌳', desc:'Planting trees and creating greener urban communities.', raised:'£1,800' },
+];
+
+const pastDraws = [
+  { month:'April 2025', numbers:[32,18,27,41,9], match5:'No winner (jackpot rolls)', match4:'2 winners — £1,450 each', match3:'14 winners — £195 each' },
+  { month:'March 2025', numbers:[15,34,22,8,39], match5:'1 winner — £4,200!', match4:'4 winners — £810 each', match3:'22 winners — £98 each' },
+  { month:'February 2025', numbers:[29,11,36,5,24], match5:'No winner (jackpot rolls)', match4:'1 winner — £3,062', match3:'11 winners — £198 each' },
+];
+
+const adminUsers = [
+  { name:'Jamie Wilson', email:'jamie@example.com', plan:'Monthly', status:'Active', charity:'Cancer Research UK', joined:'Jan 2025' },
+  { name:'Sarah Chen', email:'sarah@example.com', plan:'Yearly', status:'Active', charity:'Mind', joined:'Feb 2025' },
+  { name:'Mike Thompson', email:'mike@example.com', plan:'Monthly', status:'Lapsed', charity:'WWF', joined:'Mar 2024' },
+  { name:'Emma Davis', email:'emma@example.com', plan:'Yearly', status:'Active', charity:'Save the Children', joined:'Dec 2024' },
+  { name:'Tom Harris', email:'tom@example.com', plan:'Monthly', status:'Active', charity:'Golf Foundation', joined:'Mar 2025' },
+];
+
+const pendingWinners = [
+  { name:'Sarah Chen', match:'4-Number Match', prize:'£810', status:'Pending', month:'March 2025' },
+  { name:'Tom Harris', match:'3-Number Match', prize:'£98', status:'Pending', month:'March 2025' },
+  { name:'Emma Davis', match:'3-Number Match', prize:'£98', status:'Approved', month:'February 2025' },
+];
+
+// ═══════════════════════════════════
+// NAVIGATION
+// ═══════════════════════════════════
+function showPage(id) {
+  // Hide all sections and dashboards
+  document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
+  document.getElementById('dashboard').classList.remove('active');
+  document.getElementById('adminDash').classList.remove('active');
+
+  const el = document.getElementById(id);
+  if (el) el.classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+function showDashboard() {
+  document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
+  document.getElementById('adminDash').classList.remove('active');
+  document.getElementById('dashboard').classList.add('active');
+  renderScores();
+  renderDashCharities();
+  renderUserDrawHistory();
+  window.scrollTo(0, 0);
+}
+
+function showAdminDash() {
+  document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
+  document.getElementById('dashboard').classList.remove('active');
+  document.getElementById('adminDash').classList.add('active');
+  renderAdminUsers();
+  renderAdminCharities();
+  renderAdminWinners();
+  renderCharityReport();
+  window.scrollTo(0, 0);
+}
+
+function showDashTab(tab) {
+  ['overview','scores','charity','draws','winnings','settings'].forEach(t => {
+    document.getElementById('dash-'+t).style.display = 'none';
+    const el = document.getElementById('tab-'+t);
+    if (el) el.classList.remove('active');
+  });
+  document.getElementById('dash-'+tab).style.display = 'block';
+  const el = document.getElementById('tab-'+tab);
+  if (el) el.classList.add('active');
+}
+
+function showAdminTab(tab) {
+  ['overview','users','draws','charities','winners','reports'].forEach(t => {
+    document.getElementById('adash-'+t).style.display = 'none';
+    const el = document.getElementById('atab-'+t);
+    if (el) el.classList.remove('active');
+  });
+  document.getElementById('adash-'+tab).style.display = 'block';
+  const el = document.getElementById('atab-'+tab);
+  if (el) el.classList.add('active');
+}
+
+// ═══════════════════════════════════
+// AUTH
+// ═══════════════════════════════════
+function openModal(type) {
+  closeModal();
+  document.getElementById(type+'Modal').classList.add('open');
+}
+
+function closeModal() {
+  document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('open'));
+}
+
+function switchModal(type) {
+  closeModal();
+  setTimeout(() => openModal(type), 200);
+}
+
+function doLogin() {
+  const email = document.getElementById('loginEmail').value;
+  const pass = document.getElementById('loginPassword').value;
+  if (!email || !pass) { showToast('Please fill in all fields', 'error'); return; }
+  currentUser = { name: 'Jamie Wilson', email, avatar: 'J' };
+  closeModal();
+  updateNav();
+  showDashboard();
+  showToast('Welcome back, Jamie! 👋', 'success');
+}
+
+function doAdminLogin() {
+  isAdmin = true;
+  currentUser = { name: 'Admin', email: 'admin@greenheart.com' };
+  closeModal();
+  updateNav();
+  showAdminDash();
+  showToast('Admin access granted', 'success');
+}
+
+function doSignup() {
+  const first = document.getElementById('signupFirst').value;
+  const email = document.getElementById('signupEmail').value;
+  const pass = document.getElementById('signupPassword').value;
+  if (!first || !email || !pass) { showToast('Please fill in all fields', 'error'); return; }
+  currentUser = { name: first + ' ' + (document.getElementById('signupLast').value || ''), email, avatar: first[0].toUpperCase() };
+  closeModal();
+  updateNav();
+  document.getElementById('dashWelcome').textContent = 'Welcome, ' + first + '!';
+  document.getElementById('dashAvatar').textContent = first[0].toUpperCase();
+  document.getElementById('dashName').textContent = currentUser.name;
+  document.getElementById('dashEmail').textContent = email;
+  showDashboard();
+  showToast('Account created! Welcome to GreenHeart 🎉', 'success');
+}
+
+function logout() {
+  currentUser = null; isAdmin = false;
+  updateNav();
+  showPage('home');
+  showToast('Signed out successfully', 'success');
+}
+
+function updateNav() {
+  const navRight = document.getElementById('navRight');
+  if (currentUser) {
+    navRight.innerHTML = `
+      <button class="btn btn-ghost btn-sm" onclick="${isAdmin ? 'showAdminDash()' : 'showDashboard()'}">
+        ${isAdmin ? '⚙️ Admin' : '📊 Dashboard'}
+      </button>
+      <button class="btn btn-ghost btn-sm" onclick="logout()">Sign Out</button>
+    `;
+  } else {
+    navRight.innerHTML = `
+      <button class="btn btn-ghost" onclick="openModal('login')">Sign In</button>
+      <button class="btn btn-primary" onclick="openModal('signup')">Join Now</button>
+    `;
+  }
+}
+
+// ═══════════════════════════════════
+// SCORES
+// ═══════════════════════════════════
+function renderScores() {
+  ['scoreList','overviewScores'].forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.innerHTML = scores.map((s, i) => `
+      <div class="score-item">
+        <div class="score-val">${s.val}</div>
+        <div>
+          <div style="font-weight:600;">Stableford Score</div>
+          <div class="score-date">${formatDate(s.date)}</div>
+        </div>
+        <div style="text-align:right;">
+          <div class="score-rank text-muted">#${i+1} most recent</div>
+          ${id === 'scoreList' ? `<button class="btn btn-ghost btn-sm" style="margin-top:6px;" onclick="deleteScore(${i})">Remove</button>` : ''}
+        </div>
+      </div>
+    `).join('');
+  });
+}
+
+function addScore() {
+  const val = parseInt(document.getElementById('newScore').value);
+  const date = document.getElementById('newScoreDate').value;
+  if (!val || val < 1 || val > 45) { showToast('Score must be between 1 and 45', 'error'); return; }
+  if (!date) { showToast('Please select a date', 'error'); return; }
+  if (scores.length >= 5) scores.pop();
+  scores.unshift({ val, date });
+  document.getElementById('newScore').value = '';
+  document.getElementById('newScoreDate').value = '';
+  renderScores();
+  showToast('Score added successfully! ⛳', 'success');
+}
+
+function deleteScore(i) {
+  scores.splice(i, 1);
+  renderScores();
+  showToast('Score removed', 'success');
+}
+
+function formatDate(d) {
+  return new Date(d).toLocaleDateString('en-GB', { day:'numeric', month:'long', year:'numeric' });
+}
+
+// ═══════════════════════════════════
+// CHARITIES
+// ═══════════════════════════════════
+let activeFilter = 'all';
+
+function renderCharities(list) {
+  const grid = document.getElementById('charityGrid');
+  if (!grid) return;
+  grid.innerHTML = list.map(c => `
+    <div class="charity-card" onclick="showToast('${c.name} selected!','success')">
+      <div class="charity-logo">${c.emoji}</div>
+      <div class="charity-cat">${c.cat.toUpperCase()}</div>
+      <div class="charity-name">${c.name}</div>
+      <div class="charity-desc">${c.desc}</div>
+      <div class="charity-raised">↑ ${c.raised} raised this month</div>
+    </div>
+  `).join('');
+}
+
+function filterCharities() {
+  const q = document.getElementById('charitySearch').value.toLowerCase();
+  const filtered = charities.filter(c =>
+    (activeFilter === 'all' || c.cat === activeFilter) &&
+    (c.name.toLowerCase().includes(q) || c.desc.toLowerCase().includes(q))
+  );
+  renderCharities(filtered);
+}
+
+function filterPill(el, cat) {
+  document.querySelectorAll('.filter-pills .pill').forEach(p => p.classList.remove('active'));
+  el.classList.add('active');
+  activeFilter = cat;
+  filterCharities();
+}
+
+function renderDashCharities() {
+  const grid = document.getElementById('dashCharityGrid');
+  if (!grid) return;
+  grid.innerHTML = charities.slice(0,4).map(c => `
+    <div class="charity-card" onclick="showToast('Switched to ${c.name}!','success')" style="cursor:pointer;">
+      <div style="font-size:1.8rem;">${c.emoji}</div>
+      <div class="charity-name" style="font-size:0.9rem; margin-top:8px;">${c.name}</div>
+      <div class="charity-cat" style="font-size:0.7rem;">${c.cat}</div>
+    </div>
+  `).join('');
+}
+
+// ═══════════════════════════════════
+// DRAWS
+// ═══════════════════════════════════
+function renderPastDraws() {
+  const el = document.getElementById('pastDraws');
+  if (!el) return;
+  el.innerHTML = pastDraws.map(d => `
+    <div class="card">
+      <div class="flex items-center justify-between mb-4">
+        <div style="font-weight:700; font-size:1rem;">${d.month}</div>
+        <span class="badge badge-muted">Completed</span>
+      </div>
+      <div class="draw-numbers">
+        ${d.numbers.map(n => `<div class="draw-ball ${n > 30 ? 'green' : 'gold'}">${n}</div>`).join('')}
+      </div>
+      <div style="display:flex; flex-direction:column; gap:8px; margin-top:16px; font-size:0.85rem;">
+        <div><span class="text-green font-bold">5-Match:</span> <span class="text-muted">${d.match5}</span></div>
+        <div><span class="text-gold font-bold">4-Match:</span> <span class="text-muted">${d.match4}</span></div>
+        <div><span class="font-bold">3-Match:</span> <span class="text-muted">${d.match3}</span></div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderUserDrawHistory() {
+  const el = document.getElementById('userDrawHistory');
+  if (!el) return;
+  el.innerHTML = pastDraws.map((d,i) => `
+    <div class="score-item">
+      <div>
+        <div style="font-weight:700;">${d.month}</div>
+        <div class="text-muted text-sm">Numbers: ${d.numbers.join(' · ')}</div>
+      </div>
+      <span class="badge ${i===1 ? 'badge-gold' : 'badge-muted'}">${i===1 ? '3-Match!' : 'No match'}</span>
+    </div>
+  `).join('');
+}
+
+// ═══════════════════════════════════
+// ADMIN
+// ═══════════════════════════════════
+function renderAdminUsers() {
+  const t = document.getElementById('adminUserTable');
+  if (!t) return;
+  t.innerHTML = `
+    <thead><tr><th>User</th><th>Plan</th><th>Status</th><th>Charity</th><th>Joined</th><th>Actions</th></tr></thead>
+    <tbody>${adminUsers.map(u => `
+      <tr>
+        <td><div style="display:flex; align-items:center; gap:12px;"><div class="avatar">${u.name[0]}</div><div><div style="font-weight:600; font-size:0.9rem;">${u.name}</div><div class="text-muted text-sm">${u.email}</div></div></div></td>
+        <td>${u.plan}</td>
+        <td><span class="badge ${u.status==='Active'?'badge-green':u.status==='Lapsed'?'badge-red':'badge-muted'}">${u.status}</span></td>
+        <td class="text-muted text-sm">${u.charity}</td>
+        <td class="text-muted text-sm">${u.joined}</td>
+        <td><button class="btn btn-ghost btn-sm" onclick="showToast('Editing ${u.name}','success')">Edit</button></td>
+      </tr>
+    `).join('')}</tbody>
+  `;
+}
+
+function renderAdminCharities() {
+  const t = document.getElementById('adminCharityTable');
+  if (!t) return;
+  t.innerHTML = `
+    <thead><tr><th>Charity</th><th>Category</th><th>Raised This Month</th><th>Actions</th></tr></thead>
+    <tbody>${charities.map(c => `
+      <tr>
+        <td><div style="display:flex; align-items:center; gap:10px;"><span style="font-size:1.5rem;">${c.emoji}</span><span style="font-weight:600;">${c.name}</span></div></td>
+        <td><span class="badge badge-muted">${c.cat}</span></td>
+        <td class="text-green font-mono">${c.raised}</td>
+        <td><div style="display:flex; gap:8px;"><button class="btn btn-ghost btn-sm" onclick="showToast('Editing ${c.name}','success')">Edit</button><button class="btn btn-sm btn-danger" onclick="showToast('Deleted ${c.name}','error')">Delete</button></div></td>
+      </tr>
+    `).join('')}</tbody>
+  `;
+}
+
+function renderAdminWinners() {
+  const el = document.getElementById('adminWinnerList');
+  if (!el) return;
+  el.innerHTML = pendingWinners.map(w => `
+    <div class="card" style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px;">
+      <div>
+        <div style="font-weight:700;">${w.name}</div>
+        <div class="text-muted text-sm">${w.match} · ${w.month} · Prize: <span class="text-green font-mono">${w.prize}</span></div>
+      </div>
+      <div style="display:flex; gap:8px; align-items:center;">
+        <span class="badge ${w.status==='Approved'?'badge-green':'badge-gold'}">${w.status}</span>
+        ${w.status === 'Pending' ? `
+          <button class="btn btn-primary btn-sm" onclick="showToast('${w.name} approved!','success'); this.closest('.card').querySelector('.badge').textContent='Approved'; this.closest('.card').querySelector('.badge').className='badge badge-green'; this.parentElement.querySelectorAll('button').forEach(b=>b.remove());">Approve</button>
+          <button class="btn btn-sm btn-danger" onclick="showToast('${w.name} rejected','error')">Reject</button>
+        ` : ''}
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderCharityReport() {
+  const el = document.getElementById('charityReport');
+  if (!el) return;
+  el.innerHTML = charities.slice(0,5).map(c => `
+    <div class="flex items-center justify-between" style="padding:10px 0; border-bottom:1px solid var(--border);">
+      <div style="display:flex; align-items:center; gap:8px;">${c.emoji} <span style="font-weight:600; font-size:0.9rem;">${c.name}</span></div>
+      <span class="font-mono text-gold">${c.raised}</span>
+    </div>
+  `).join('');
+}
+
+function runSimulation() {
+  const nums = Array.from({length:5}, () => Math.floor(Math.random()*45)+1);
+  document.getElementById('simulationResult').style.display = 'block';
+  document.getElementById('simNumbers').innerHTML = nums.map(n => `<div class="draw-ball green">${n}</div>`).join('');
+  const winners5 = Math.floor(Math.random()*2);
+  const winners4 = Math.floor(Math.random()*5)+1;
+  const winners3 = Math.floor(Math.random()*20)+5;
+  document.getElementById('simStats').innerHTML = `
+    <div style="display:flex; flex-direction:column; gap:8px; font-size:0.9rem;">
+      <div>🎯 <span class="text-green font-bold">5-Match:</span> ${winners5} winners${winners5===0?' (jackpot rolls)':''}</div>
+      <div>🥈 <span class="text-gold font-bold">4-Match:</span> ${winners4} winners — £${(3062/winners4).toFixed(0)} each</div>
+      <div>🥉 <span class="font-bold">3-Match:</span> ${winners3} winners — £${(2187/winners3).toFixed(0)} each</div>
+    </div>
+  `;
+  showToast('Simulation complete! Review results before publishing.', 'success');
+}
+
+function publishDraw() {
+  showToast('Draw published! Winners have been notified. 🎉', 'success');
+}
+
+// ═══════════════════════════════════
+// CHARITY SLIDER
+// ═══════════════════════════════════
+function updateCharitySlider() {
+  const val = document.getElementById('charitySlider').value;
+  document.getElementById('charityPct').textContent = val + '%';
+  document.getElementById('charityAmt').textContent = '£' + (9.99 * val / 100).toFixed(2);
+}
+
+// ═══════════════════════════════════
+// TOAST
+// ═══════════════════════════════════
+function showToast(msg, type='success') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast ' + type + ' show';
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// ═══════════════════════════════════
+// CLOSE MODAL ON OVERLAY CLICK
+// ═══════════════════════════════════
+document.querySelectorAll('.modal-overlay').forEach(o => {
+  o.addEventListener('click', e => { if (e.target === o) closeModal(); });
+});
+
+// ═══════════════════════════════════
+// INIT
+// ═══════════════════════════════════
+renderCharities(charities);
+renderPastDraws();
+</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  const { createClient } = supabase;
+  const _supabase = createClient(
+    'https://njrcmtexakwxggtkxjlk.supabase.co',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5qcmNtdGV4YWt3eGdndGt4amxrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU2NDUxMTgsImV4cCI6MjA5MTIyMTExOH0.w5MwT-8SwHD9nf0qOqRBiFTTCERN_7O-k4_ra685K_4'
+  );
+
+  // REAL login using Supabase Auth
+  async function doLogin() {
+    const email = document.getElementById('loginEmail').value;
+    const password = document.getElementById('loginPassword').value;
+    if (!email || !password) { showToast('Please fill in all fields', 'error'); return; }
+
+    showToast('Signing in...', 'success');
+    const { data, error } = await _supabase.auth.signInWithPassword({ email, password });
+    if (error) { showToast(error.message, 'error'); return; }
+
+    const { data: profile } = await _supabase
+      .from('profiles').select('*').eq('id', data.user.id).single();
+
+    currentUser = profile;
+    isAdmin = profile?.role === 'admin';
+    document.getElementById('dashWelcome').textContent = 'Welcome back, ' + profile.first_name + '!';
+    document.getElementById('dashAvatar').textContent = profile.first_name[0];
+    document.getElementById('dashName').textContent = profile.first_name + ' ' + profile.last_name;
+    document.getElementById('dashEmail').textContent = profile.email;
+    closeModal(); updateNav();
+    isAdmin ? showAdminDash() : showDashboard();
+  }
+
+  // REAL signup using Supabase Auth
+  async function doSignup() {
+    const first = document.getElementById('signupFirst').value;
+    const last = document.getElementById('signupLast').value;
+    const email = document.getElementById('signupEmail').value;
+    const password = document.getElementById('signupPassword').value;
+    const plan = document.getElementById('signupPlan').value;
+    if (!first || !email || !password) { showToast('Please fill in all fields', 'error'); return; }
+
+    showToast('Creating your account...', 'success');
+    const { data, error } = await _supabase.auth.signUp({ email, password });
+    if (error) { showToast(error.message, 'error'); return; }
+
+    // Create profile record
+    await _supabase.from('profiles').insert({
+      id: data.user.id,
+      first_name: first,
+      last_name: last || '',
+      email: email,
+      role: 'subscriber'
+    });
+
+    currentUser = { first_name: first, last_name: last, email };
+    document.getElementById('dashWelcome').textContent = 'Welcome, ' + first + '!';
+    document.getElementById('dashAvatar').textContent = first[0].toUpperCase();
+    document.getElementById('dashName').textContent = first + ' ' + last;
+    document.getElementById('dashEmail').textContent = email;
+    closeModal(); updateNav(); showDashboard();
+    showToast('Account created! Welcome to GreenHeart 🎉', 'success');
+  }
+
+  // REAL score saving to Supabase
+  async function addScore() {
+    const val = parseInt(document.getElementById('newScore').value);
+    const date = document.getElementById('newScoreDate').value;
+    if (!val || val < 1 || val > 45) { showToast('Score must be between 1 and 45', 'error'); return; }
+    if (!date) { showToast('Please select a date', 'error'); return; }
+    if (!currentUser) { showToast('Please sign in first', 'error'); return; }
+
+    const { error } = await _supabase.from('golf_scores').insert({
+      user_id: currentUser.id,
+      score: val,
+      played_date: date
+    });
+    if (error) { showToast('Error saving score: ' + error.message, 'error'); return; }
+
+    // Reload scores from database
+    await loadScoresFromDB();
+    document.getElementById('newScore').value = '';
+    document.getElementById('newScoreDate').value = '';
+    showToast('Score saved! ⛳', 'success');
+  }
+
+  async function loadScoresFromDB() {
+    if (!currentUser) return;
+    const { data } = await _supabase
+      .from('golf_scores')
+      .select('*')
+      .eq('user_id', currentUser.id)
+      .eq('is_active', true)
+      .order('played_date', { ascending: false })
+      .limit(5);
+    if (data) {
+      scores = data.map(s => ({ val: s.score, date: s.played_date }));
+      renderScores();
+    }
+  }
+
+  // Check if user is already logged in on page load
+  window.addEventListener('load', async () => {
+    const { data: { session } } = await _supabase.auth.getSession();
+    if (session) {
+      const { data: profile } = await _supabase
+        .from('profiles').select('*').eq('id', session.user.id).single();
+      if (profile) {
+        currentUser = profile;
+        isAdmin = profile.role === 'admin';
+        updateNav();
+      }
+    }
+  });
+</script>
+</body>
+</html>
